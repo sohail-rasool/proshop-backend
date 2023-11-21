@@ -2,6 +2,10 @@ import express from "express";
 import morgan from "morgan";
 import products from "./src/data/products.js";
 import 'dotenv/config'
+import { connectToDB } from "./src/services/db.js";
+
+// Connection TO DB
+connectToDB();
 
 const app = express();
 app.use(morgan('tiny'));

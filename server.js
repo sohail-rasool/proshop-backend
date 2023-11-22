@@ -1,26 +1,23 @@
 import express from "express";
 import morgan from "morgan";
-import products from "./src/data/products.js";
-import 'dotenv/config'
+import "dotenv/config";
 import { connectToDB } from "./src/services/db.js";
+import productRouter from "./src/routes/productRoutes.js";
+import { notFound, customErrorHandler } from "./src/middleware/errorHandler.js";
 
 // Connection TO DB
 connectToDB();
 
 const app = express();
-app.use(morgan('tiny'));
+app.use(morgan("tiny"));
 const port = process.env.PORT || 5000;
-// respond with "hello world" when a GET request is made to the homepage
-app.get("/api/v1/products", (req, res) => {
-  res.send(products);
-});
 
-app.get("/api/v1/products/:id", (req, res) => {
-  const product = products?.find(
-    (productItem) => Number(productItem.id) === Number(req.params.id)
-  );
-  res.send(product);
-});
+// Routes
+app.use(`${process.env.APP_URL}/products`, productRouter);
+
+// Error Middle ware
+app.use(notFound);
+app.use(customErrorHandler);
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);

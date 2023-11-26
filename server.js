@@ -6,6 +6,7 @@ import productRouter from "./src/routes/productRoutes.js";
 import userRouter from "./src/routes/usersRoutes.js";
 import { notFound, customErrorHandler } from "./src/middleware/errorHandler.js";
 import bodyParser from "body-parser";
+import cookieParser from "cookie-parser";
 
 // Connection TO DB
 connectToDB();
@@ -14,12 +15,10 @@ const app = express();
 app.use(morgan("tiny"));
 const port = process.env.PORT || 5000;
 
-// parse application/x-www-form-urlencoded
+// Middleware
 app.use(bodyParser.urlencoded({ extended: false }))
-
-// parse application/json
 app.use(bodyParser.json())
-
+app.use(cookieParser())
 // Routes
 app.use(`${process.env.APP_URL}/products`, productRouter);
 app.use(`${process.env.APP_URL}/users`, userRouter);

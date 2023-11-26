@@ -10,15 +10,21 @@ import {
   getUser,
   updateUser,
 } from "../controller/usersController.js";
+import { protect, isAdmin } from "../middleware/auth.js";
 
 const router = express.Router();
 
-router.post('/login',authUser)
-router.post('/register',registerUser)
-router.post('/logout',logoutUser)
-router.route('/profile').get(userProfile).put(updateProfile)
-router.get('/',getUsers)
-router.route('/:id').get(getUser).put(updateUser).delete(deleteUser)
+router.post("/login", authUser);
+router.post("/register", registerUser);
+router.post("/logout", logoutUser);
+router.route("/profile").get(protect, userProfile).put(protect, updateProfile);
+//Admin routes
+router.get("/", protect, isAdmin, getUsers);
+router
+  .route("/:id")
+  .get(protect, isAdmin, getUser)
+  .put(protect, isAdmin, updateUser)
+  .delete(protect, isAdmin, deleteUser);
 
 const userRoute = router;
 
